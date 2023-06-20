@@ -13,10 +13,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import devandroid.julian.appgaseta.R;
 import devandroid.julian.appgaseta.apoio.UtilGasEta;
+import devandroid.julian.appgaseta.controller.CombustivelController;
 import devandroid.julian.appgaseta.model.Combustivel;
 
 public class GasEtaActivity extends AppCompatActivity {
 
+    CombustivelController controller;
     Combustivel combustivelGasolina;
     Combustivel combustivelEtanol;
     EditText editGasolina;
@@ -37,6 +39,7 @@ public class GasEtaActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        controller = new CombustivelController(GasEtaActivity.this);
         setContentView(R.layout.activity_gaseta);
 
         editGasolina = findViewById(R.id.editGasolina);
@@ -56,13 +59,13 @@ public class GasEtaActivity extends AppCompatActivity {
                 boolean isDadosOk = true;
 
                 if(TextUtils.isEmpty(editGasolina.getText())){
-                    editGasolina.setError("* Obrigatório");
+                    editGasolina.setError("* Required");
                     editGasolina.requestFocus();
                     isDadosOk = false;
                 }
 
                 if(TextUtils.isEmpty(editEtanol.getText())){
-                    editEtanol.setError("* Obrigatório");
+                    editEtanol.setError("* Required");
                     editEtanol.requestFocus();
                     isDadosOk = false;
                 }
@@ -81,7 +84,7 @@ public class GasEtaActivity extends AppCompatActivity {
 
                 }else{
                     Toast.makeText(GasEtaActivity.this,
-                            "Por favor, digite os dados obrigatórios...",
+                            "Please enter the required data...",
                             Toast.LENGTH_LONG).show();
                     btnSalvar.setEnabled(false);
                 }
@@ -104,6 +107,10 @@ public class GasEtaActivity extends AppCompatActivity {
                 combustivelGasolina.setRecomendacao(UtilGasEta.calcularMelhorOpcao(precoGasolina, precoEtanol));
                 combustivelEtanol.setRecomendacao(UtilGasEta.calcularMelhorOpcao(precoGasolina, precoEtanol));
 
+                controller.salvar(combustivelEtanol);
+
+                Toast.makeText(GasEtaActivity.this, "Saved successfully...",
+                        Toast.LENGTH_LONG).show();
             }
         });
 
@@ -116,6 +123,7 @@ public class GasEtaActivity extends AppCompatActivity {
                 txtResultado.setText("RESULTADO");
 
                 btnSalvar.setEnabled(false);
+                controller.limpar();
 
             }
         });
@@ -123,7 +131,7 @@ public class GasEtaActivity extends AppCompatActivity {
         btnFinalizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(GasEtaActivity.this, "GasEta Finalizado...",
+                Toast.makeText(GasEtaActivity.this, "App GasEta Closed...",
                         Toast.LENGTH_LONG).show();
                 finish();
             }
