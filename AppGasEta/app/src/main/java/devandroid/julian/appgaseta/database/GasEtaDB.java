@@ -1,16 +1,21 @@
 package devandroid.julian.appgaseta.database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import devandroid.julian.appgaseta.model.Combustivel;
 import devandroid.julian.appgaseta.view.SplashActivity;
 
 public class GasEtaDB extends SQLiteOpenHelper {
 
-    public static final String DB_NAME = "gaseta.db";
-    public static final int DB_VERSION = 1;
+    private static final String DB_NAME = "gaseta.db";
+    private static final int DB_VERSION = 1;
 
     Cursor cursor;
 
@@ -47,23 +52,52 @@ public class GasEtaDB extends SQLiteOpenHelper {
 
     }
 
-    // Criar métodos para implementar um CRUD
-    // C = Create criar o banco de dados e as tabelas
-    // Create database nome_do_banco_de_dados.db (SQL)
-    // 1 - Nome do Banco de Dados
-    // 2 - Versão do Banco de Dados
+    public void salvarObjeto(String tabela, ContentValues dados){
 
+        db.insert(tabela, null, dados);
+    }
 
+    public List<Combustivel> listarDados(){
 
-    // Create table (SQL)
+        List<Combustivel> lista = new ArrayList<>();
 
+        //Representa um registro que está salvo na tabela
+        //Combustível do Banco de Dados da Aplicação
+        Combustivel registro;
 
-    // R = Retriever recuperar os dados salvos das tabelas
-    // Select * from table (SQL)
+        String querySQL = "SELECT * FROM Combustivel";
 
-    // U = Update alterar os dados que já existem em um registro na tabela
-    // Update from table (SQL)
+        cursor = db.rawQuery(querySQL, null);
 
-    // D = Delete deletar os dados/registros de uma tabela
-    // Delete from (SQL)
+        if (cursor.moveToFirst()){
+
+            do {
+
+                registro = new Combustivel();
+
+                registro.setId(cursor.getInt(0));
+                registro.setNomeDoCombustivel(cursor.getString(1));
+                registro.setPrecoDoCombustivel(cursor.getDouble(2));
+                registro.setRecomendacao(cursor.getString(3));
+
+                lista.add(registro);
+
+            }while (cursor.moveToNext());
+
+        }else {
+
+        }
+
+        return lista;
+    }
+
+    public void alterarObjeto(String tabela, ContentValues dados){
+
+        // ID do registro a ser alterado (PK)
+        int id = dados.getAsInteger("id");
+
+        db.update(tabela, dados, "id=?", new String[]{Integer.toString(id)});
+
+    }
+
 }
