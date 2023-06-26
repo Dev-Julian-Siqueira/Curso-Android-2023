@@ -8,6 +8,7 @@ public class Pessoa {
     // Atributos - Objetos - Molde - Modelo - Template
     // Métodos de Acesso - Getts and Setts
 
+    private int id;
     private String primeiroNome;
     private String sobreNome;
     private String cursoDesejado;
@@ -15,12 +16,19 @@ public class Pessoa {
 
     public Pessoa(){}
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getPrimeiroNome() {
         return primeiroNome;
     }
 
     public void setPrimeiroNome(String primeiroNome) {
-
         this.primeiroNome = primeiroNome;
     }
 
@@ -47,8 +55,6 @@ public class Pessoa {
     public void setTelefoneContato(String telefoneContato) {
         this.telefoneContato = telefoneContato;
     }
-
-
     // To String - Para Textos - Para Strings de Caracteres
 
 
